@@ -1,8 +1,4 @@
 # .env file
-.env
-.env.local
-.env.development
-.env.production
 
 # Node modules (for Node.js projects)
 node_modules/
@@ -21,4 +17,5 @@ build/
 # IDE/editor folders
 .vscode/
 .idea/
-.env
+node_modules
+config.bat
