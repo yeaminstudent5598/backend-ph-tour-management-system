@@ -1,0 +1,24 @@
+# .env file
+.env
+.env.local
+.env.development
+.env.production
+
+# Node modules (for Node.js projects)
+node_modules/
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# build files
+dist/
+build/
+
+# IDE/editor folders
+.vscode/
+.idea/
+.env
