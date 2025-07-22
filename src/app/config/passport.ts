@@ -4,9 +4,9 @@ import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-go
 import { envVars } from "./env";
 import { User } from "../modules/user/user.model";
 import { Role } from "../modules/user/user.interface";
-
+  
 passport.use(
-    new GoogleStrategy(
+    new GoogleStrategy( 
         {
             clientID: envVars.GOOGLE_CLIENT_ID,
         clientSecret: envVars.GOOGLE_CLIENT_SECRET,
