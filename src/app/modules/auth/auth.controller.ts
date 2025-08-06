@@ -57,7 +57,6 @@ const credentialsLogin = catchAsync ( async (req: Request, res: Response, next: 
     //     secure: false,
     // })
 
-
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getNewAccessToken = catchAsync ( async (req: Request, res: Response, next: NextFunction) =>{
