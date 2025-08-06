@@ -25,7 +25,7 @@ const loadEnvVariables = (): EnvConfig => {
 
     requiredEnvVariables.forEach(key => {
         if(!process.env[key]) {
-            throw new Error (`Missing require eviroment variable ${key}`)
+            throw new Error (`Missing require environment variable ${key}`)
         }
 
     })

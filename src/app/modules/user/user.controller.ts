@@ -36,13 +36,12 @@ import { JwtPayload, verify } from "jsonwebtoken";
         
 //     }
 // }
+
+
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createUser = catchAsync ( async (req: Request, res: Response, next: NextFunction) =>{
     const user = await UserServices.createUser(req.body)
-        // res.status(httpStatus.CREATED).json({
-        //     message: "User created successfully",
-        //     user
-        // })
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.CREATED,

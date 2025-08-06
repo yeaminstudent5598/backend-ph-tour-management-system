@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express"
 import { catchAsync } from "../../utils/catchAysnc"
@@ -9,28 +10,53 @@ import { setAuthCookie } from "../../utils/setCookie"
 import { createUserTokens } from "../../utils/userToken"
 import { envVars } from "../../config/env"
 import { JwtPayload } from "jsonwebtoken"
+import passport from "passport"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const credentialsLogin = catchAsync ( async (req: Request, res: Response, next: NextFunction) =>{
-    const loginInfo = await AuthServices.credentialsLogin(req.body)
+    // const loginInfo = await AuthServices.credentialsLogin(req.body)
+    
+
+    passport.authenticate("local", async (err: any, user: any, info: any)  => {
+// console.log("info", info);
+
+        if(err) {
+            return next( new AppError(401, err))
+        }
+
+        if(!user) {
+            // return new AppError(401, info.message)
+            return next( new AppError(401, info.message))
+        }
+
+        const userTokens = await createUserTokens(user)
+
+        // delete user.toObject().password
+        
+        const {password: pass, ...rest} = user.toObject()
+        setAuthCookie(res, userTokens)
+
+        sendResponse(res, {
+            success: true,
+            statusCode: httpStatus.OK,
+            message: "User Logged In successfully",
+            data: {
+                accessToken : userTokens.accessToken,
+                refreshToken : userTokens.refreshToken,
+                user: rest
+            },
+        })
+    })(req, res, next)
 
     //     res.cookie("accessToken", loginInfo.accessToken, {
     //     httpOnly: true,
-    //     secure:false,   
+    //     secure:false, 
     // })
     // res.cookie("refreshToken", loginInfo.refreshToken, {
     //     httpOnly: true,
     //     secure: false,
     // })
 
-    setAuthCookie(res, loginInfo)
-
-        sendResponse(res, {
-            success: true,
-            statusCode: httpStatus.OK,
-            message: "User Logged In successfully",
-            data: loginInfo,
-        })
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getNewAccessToken = catchAsync ( async (req: Request, res: Response, next: NextFunction) =>{
@@ -95,7 +121,7 @@ const googleCallbackController = catchAsync ( async (req: Request, res: Response
     }
     const user = req.user;
 
-    console.log("user", user)
+    // console.log("user", user)
 
     if(!user) {
         throw new AppError(httpStatus.NOT_FOUND, "User Not Found")
