@@ -9,6 +9,7 @@ const userSchema = new Schema<IUser>({
     name: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     password: {type: String },
+    age: Number,
     role: {
         type: String,
         enum: Object.values(Role),
@@ -18,7 +19,7 @@ const userSchema = new Schema<IUser>({
     picture: { type: String },
     address: { type: String },
     isDeleted: { type: Boolean, default: false },
-    IsActive: {
+    isActive: {
         type: String,
         enum: Object.values(IsActive),
         default: IsActive.ACTIVE,

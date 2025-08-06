@@ -6,10 +6,10 @@ interface TMeta {
 
 interface TResponse<T> {
     statusCode: number;
-    success:boolean;
+    success: boolean;
     message: string;
     data: T;
-    meta ?: TMeta
+    meta ?: TMeta;
 }
 
 export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
