@@ -101,26 +101,54 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
 // Frontend(localhost:5173) - User - Tour - Booking (Pending) - Payment(Unpaid) -> SSLCommerz Page -> Payment Fail / Cancel -> Backend(localhost:5000) -> Update Payment(FAIL / CANCEL) & Booking(FAIL / CANCEL) -> redirect to frontend -> Frontend(localhost:5173/payment/cancel or localhost:5173/payment/fail)
 
-const getUserBookings = async () => {
-
-    return {}
+// booking.service.ts
+const getUserBookings = async (userId: string) => {
+    const bookings = await Booking.find({ user: userId })
+        .populate("user", "name email phone address")
+        .populate("tour", "title costFrom")
+        .populate("payment");
+    return bookings;
 };
 
-const getBookingById = async () => {
-    return {}
+
+// booking.service.ts
+const getBookingById = async (id: string) => {
+    const booking = await Booking.findById(id)
+        .populate("user", "name email phone address")
+        .populate("tour", "title costFrom")
+        .populate("payment");
+
+    if (!booking) {
+        throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+    }
+
+    return booking;
 };
 
-const updateBookingStatus = async (
 
-) => {
+// booking.service.ts
+const updateBookingStatus = async (id: string, status: string) => {
+    const booking = await Booking.findById(id);
+    if (!booking) {
+        throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+    }
 
-    return {}
+    booking.status = status as BOOKING_STATUS;
+    await booking.save();
+
+    return booking;
 };
 
+// booking.service.ts
 const getAllBookings = async () => {
+    const bookings = await Booking.find()
+        .populate("user", "name email phone address")
+        .populate("tour", "title costFrom")
+        .populate("payment");
 
-    return {}
+    return bookings;
 };
+
 
 export const BookingService = {
     createBooking,
