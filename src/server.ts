@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-import { Server, server} from "http";
+import { Server } from "http";
 import mongoose from "mongoose";
-import app from "./app";
 import { envVars } from "./app/config/env";
 import { seadSuperAdmin } from "./app/utils/seadSuperAdmin";
 import { connectRedis } from "./app/config/redis.config";
+import app from "./app";
 
 let server: Server;
  
