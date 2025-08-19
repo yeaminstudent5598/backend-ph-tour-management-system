@@ -1,14 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes"
-import { User } from "./user.model";
 import { UserServices } from "./user.service";
-import AppError from "../../errorHelpers/AppError";
 import { catchAsync } from "../../utils/catchAysnc";
 import { sendResponse } from "../../utils/sendResponse";
-import { verifyToken } from "../../utils/jwt";
-import { envVars } from "../../config/env";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 
 
 // const user = await UserServices.createUser(req.body)
@@ -46,7 +43,7 @@ const createUser = catchAsync ( async (req: Request, res: Response, next: NextFu
             success: true,
             statusCode: httpStatus.CREATED,
             message: "User Created successfully",
-            data: user,
+            data: user, 
         })
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,8 +69,9 @@ const updateUser = catchAsync ( async (req: Request, res: Response, next: NextFu
         })
 })
 
-const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) =>{
-    const result = await UserServices.getAllUsers();
+const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+    const result = await UserServices.getAllUsers(query as Record<string, string>);
 
     // res.status(httpStatus.OK).json({
     //     success: true,
@@ -81,16 +79,46 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFun
     //     data: users
     // })
     sendResponse(res, {
-            success: true,
-            statusCode: httpStatus.CREATED,
-            message: "All Users Retrieved Successfully",
-            data: result.data,
-            meta: result.meta,
-        })
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "All Users Retrieved Successfully",
+        data: result.data,
+        meta: result.meta
+    })
+})
+
+const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload
+    const result = await UserServices.getMe(decodedToken.userId);
+
+    // res.status(httpStatus.OK).json({
+    //     success: true,
+    //     message: "All Users Retrieved Successfully",
+    //     data: users
+    // })
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "Your profile Retrieved Successfully",
+        data: result.data
+    })
+})
+
+const getSingleUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const result = await UserServices.getSingleUser(id);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Retrieved Successfully",
+        data: result.data
+    })
 })
 
 export const UserControllers = {
     createUser,
     getAllUsers,
-    updateUser
+    getSingleUser,
+    updateUser,
+    getMe
 }
