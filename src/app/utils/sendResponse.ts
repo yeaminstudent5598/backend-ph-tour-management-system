@@ -1,6 +1,7 @@
 import { Response } from "express";
 
 interface TMeta {
+    page: number;
     total: number;
 }
 

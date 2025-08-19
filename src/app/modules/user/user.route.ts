@@ -1,21 +1,20 @@
 import { Router } from "express";
-import { UserControllers } from "./user.controller";
-import { createUserZodSchema, updateUserZodSchema } from "./user.validation";
-import { validationRequest } from "../../middlewares/validateRequest";
 import { checkAuth } from "../../middlewares/checkAuth";
+import { UserControllers } from "./user.controller";
 import { Role } from "./user.interface";
-import { AnyZodObject } from "zod";
+import { updateUserZodSchema } from "./user.validation";
+import { validationRequest } from "../../middlewares/validateRequest";
+
+const router = Router()
 
 
 
-const router = Router();
-
-
- 
 router.post("/register",
-     validationRequest(createUserZodSchema),
-     UserControllers.createUser)
+    // validateRequest(createUserZodSchema),
+    UserControllers.createUser)
 router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), UserControllers.getAllUsers)
+router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe)
+router.get("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), UserControllers.getSingleUser)
 router.patch("/:id", validationRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateUser)
-
+// /api/v1/user/:id
 export const UserRoutes = router
