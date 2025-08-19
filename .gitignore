@@ -22,4 +22,5 @@ build/
 .vscode/
 .idea/
 .env
-node_modules
+node_modules.env
+.env
